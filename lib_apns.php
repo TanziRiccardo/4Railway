@@ -47,6 +47,13 @@ function apns_build_jwt(&$cache = null) {
     $cache['iat'] = time();
     return $jwt;
 }
+function apns_host() {
+    $useSandbox = getenv('APNS_USE_SANDBOX');
+    if ($useSandbox && ($useSandbox === '1' || strcasecmp($useSandbox,'true')===0)) {
+        return 'https://api.sandbox.push.apple.com';
+    }
+    return 'https://api.push.apple.com';
+}
 
 function apns_send_alert($deviceToken, $message, $bundleId, $jwt) {
     $payload = json_encode([
@@ -56,7 +63,7 @@ function apns_send_alert($deviceToken, $message, $bundleId, $jwt) {
         ]
     ]);
 
-    $url = "https://api.push.apple.com/3/device/" . $deviceToken;
+    $url = apns_host() . "/3/device/" . $deviceToken;
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_POST           => true,
