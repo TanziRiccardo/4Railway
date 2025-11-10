@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/lib_apns.php';
 
-function envv($k){ $v=getenv($k); return $v===false? '': $v; }
+
 
 $queueBase = rtrim(envv('QUEUE_BASE_URL'), '/'); // es: https://TUO-SITO.altervista.org/api/push_queue
 $queueSecret = envv('PUSH_QUEUE_SECRET');        // lo stesso usato su Altervista
