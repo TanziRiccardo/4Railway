@@ -3,7 +3,7 @@ require_once __DIR__ . '/lib_apns.php';
 
 // Sicurezza di base con shared secret + facoltativo HMAC del body
 function require_auth($rawBody) {
-    $secret = envv('7f05c487-6b43-4d68-a929-3740a2f101d5'); // imposta questa env su Railway
+    $secret = envv('PUSH_SHARED_SECRET'); // imposta questa env su Railway
     if ($secret === '') {
         http_response_code(500);
         echo json_encode(['ok' => false, 'error' => 'missing_PUSH_SHARED_SECRET']);
