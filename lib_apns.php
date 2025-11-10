@@ -20,9 +20,9 @@ function apns_build_jwt(&$cache = null) {
         $cache = ['jwt' => null, 'iat' => 0];
     }
 
-    $teamId = envv('R2YZZRHWGX');
-    $keyId  = envv('7H8K9M45GL');
-    $p8b64  = envv('LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUdUQWdFQU1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhCSGt3ZHdJQkFRUWd6K0RMcFo5amczTTlyZk4wDQo0aUZsT2hTeXdIekgyZFYvcHlMK1dtTzNHTytnQ2dZSUtvWkl6ajBEQVFlaFJBTkNBQVF6QWZ5VTdOUFI4OElCDQphQW5MaGtFQ1J4MHAwSGdXbmJZdGc2VVN2bzBBWUh4dzAvMGdOMXdrNVdYQnNNSENleUI3Z3BqTFJ3S0lzZHJpDQpQQkpCa0pFdA0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ=='); // PEM .p8 in base64
+    $teamId = envv('APNS_TEAM_ID');
+    $keyId  = envv('APNS_KEY_ID');
+    $p8b64  = envv('APNS_P8_BASE64'); // PEM .p8 in base64
     if ($teamId === '' || $keyId === '' || $p8b64 === '') {
         throw new Exception('APNS env missing (APNS_TEAM_ID, APNS_KEY_ID, APNS_P8_BASE64)');
     }
