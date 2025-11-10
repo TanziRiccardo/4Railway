@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__.'/lib_apns.php';
 
-$queueBase   = rtrim(trim(envv('QUEUE_BASE_URL')), '/'); // es.: https://TUO-DOMINIO.altervista.org/api/push_queue
-$queueSecret = trim(envv('PUSH_QUEUE_SECRET'));          // deve essere ESATTAMENTE "riccardoprova"
-$bundleId    = trim(envv('APNS_BUNDLE_ID'));
+$queueBase = rtrim(envv('QUEUE_BASE_URL'), '/'); // es: https://TUO-SITO.altervista.org/api/push_queue
+$queueSecret = envv('PUSH_QUEUE_SECRET');        // lo stesso usato su Altervista
+$bundleId = envv('APNS_BUNDLE_ID');
 
 if ($queueBase==='' || $queueSecret==='' || $bundleId==='') {
   fwrite(STDERR, "Missing env QUEUE_BASE_URL / PUSH_QUEUE_SECRET / APNS_BUNDLE_ID\n");
@@ -15,11 +15,7 @@ $jwtCache = ['jwt'=>null, 'iat'=>0];
 function http_get_json($url, $secret) {
   $ch = curl_init($url);
   curl_setopt_array($ch, [
-    CURLOPT_HTTPHEADER     => [
-      'X-Auth: '.$secret,
-      'Accept: application/json',
-      'User-Agent: apns-worker/1.0'
-    ],
+    CURLOPT_HTTPHEADER     => ['X-Auth: '.$secret],
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT        => 15,
     CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4
@@ -35,11 +31,7 @@ function http_post_json($url, $secret, $data) {
   $ch = curl_init($url);
   curl_setopt_array($ch, [
     CURLOPT_POST           => true,
-    CURLOPT_HTTPHEADER     => [
-      'Content-Type: application/json',
-      'X-Auth: '.$secret,
-      'User-Agent: apns-worker/1.0'
-    ],
+    CURLOPT_HTTPHEADER     => ['Content-Type: application/json', 'X-Auth: '.$secret],
     CURLOPT_POSTFIELDS     => $payload,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT        => 15,
@@ -51,6 +43,7 @@ function http_post_json($url, $secret, $data) {
   curl_close($ch);
   return [$code, $body];
 }
+
 while (true) {
   // 1) prendi prossimo job
   list($code, $body) = http_get_json($queueBase.'/next.php', $queueSecret);
